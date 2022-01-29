@@ -1,7 +1,14 @@
+# try:
 from watchdog.observers import Observer
 import time
 from watchdog.events import FileSystemEventHandler
 import os,json
+    
+# except ModuleNotFoundError:
+#     from subprocess import call
+#     modules = ['watchdog']
+#     call('pip install '+ ''.join(modules),shell=True)
+
 
 class MyHandler(FileSystemEventHandler):
     def __init__(self,fileCounter = 1):
@@ -12,14 +19,17 @@ class MyHandler(FileSystemEventHandler):
             newName = str(self.fileCounter) + "_newFile" + filename
             fileExists = os.path.isfile(folderDestination+ '/'+ newName)
             while fileExists:
+                
                 self.fileCounter += 1
                 newName = str(self.fileCounter) + "_newFile_" + filename
+                fileExists = os.path.isfile(folderDestination+ '/'+ newName)
+                
+                    
             self.fileCounter += 1
             src = folder_to_track + '/'+ filename
             newDestination = folderDestination + '/'+ newName
             os.rename(src, newDestination)
-        
-
+    
 folder_to_track = 'firstFolder'
 folderDestination = 'secondFolder'
 eventHandler = MyHandler()
