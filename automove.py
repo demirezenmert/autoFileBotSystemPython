@@ -13,25 +13,33 @@ except ModuleNotFoundError:
 class MyHandler(FileSystemEventHandler):
     def __init__(self,fileCounter = 1):
         self.fileCounter = fileCounter
+        self.isFoldersExist()
     def on_modified(self, event):
         
         for filename in os.listdir(targetFolder):
             newName = str(self.fileCounter) + "_newFile" + filename
-            fileExists = os.path.isfile(folderDestination+ '/'+ newName)
+            fileExists = os.path.isfile(destinationFolder+ '/'+ newName)
             while fileExists:
                 
                 self.fileCounter += 1
                 newName = str(self.fileCounter) + "_newFile_" + filename
-                fileExists = os.path.isfile(folderDestination+ '/'+ newName)
+                fileExists = os.path.isfile(destinationFolder+ '/'+ newName)
                 
                     
             
             src = targetFolder + '/'+ filename
-            newDestination = folderDestination + '/'+ newName
+            newDestination = destinationFolder + '/'+ newName
             os.rename(src, newDestination)
+    # Checking directory exist OR nor
+    def isFoldersExist(self):
+        tfolder = os.path.isdir(targetFolder)#target directory
+        dfolder = os.path.isdir(destinationFolder)# Destination directory
+        if tfolder == False : os.mkdir(targetFolder)
+        if dfolder == False : os.mkdir(destinationFolder)
     
 targetFolder = 'firstFolder'
-folderDestination = 'secondFolder'
+destinationFolder = 'secondFolder2'
+
 eventHandler = MyHandler()
 observer = Observer()
 observer.schedule(eventHandler, targetFolder, recursive= True)
